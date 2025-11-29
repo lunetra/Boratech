@@ -24,8 +24,10 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    crossorigin="anonymous">
 </head>
 
 <body>
@@ -43,10 +45,10 @@
           </div>
         </div>
         <nav class="nav">
-          <a href="#services">Services</a>
-          <a href="#projects">Projects</a>
-          <a href="#team">Team</a>
-          <a href="#contact">Contact</a>
+          <a data-section="services">Services</a>
+          <a data-section="projects">Projects</a>
+          <a data-section="team">Team</a>
+          <a data-section="contact">Contact</a>
         </nav>
         <button class="menu-toggle" aria-label="Toggle navigation">
           <span></span>
@@ -70,8 +72,8 @@
               platforms to media and data pipelines—for teams that prioritize stability, privacy, and clear engineering.
             </p>
             <div class="hero-actions">
-              <a href="#contact" class="btn btn-primary">Get in Touch</a>
-              <a href="#projects" class="btn btn-outline">View Projects</a>
+              <a data-section="contact" class="btn btn-primary">Get in Touch</a>
+              <a data-section="projects" class="btn btn-outline">View Projects</a>
             </div>
           </div>
           <aside class="hero-sidecard">
@@ -361,12 +363,46 @@
     window.addEventListener('orientationchange', start);
   </script>
 
-  <script id="header-particle-network">
-    (function() {
-      var ParticleNetworkAnimation, PNA;
-      ParticleNetworkAnimation = PNA = function() {};
+  <script>
+    document.querySelectorAll('[data-section]').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
 
-      PNA.prototype.init = function(element) {
+        const targetId = this.getAttribute('data-section');
+        const targetSection = document.getElementById(targetId);
+
+        if (targetSection) {
+          targetSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+
+          const nav = document.querySelector('.nav');
+          const menuToggle = document.querySelector('.menu-toggle');
+          nav?.classList.remove('active');
+          menuToggle?.classList.remove('active');
+        }
+      });
+    });
+
+    window.addEventListener('load', () => {
+      if (window.location.hash) {
+        const target = document.getElementById(window.location.hash.substring(1));
+        if (target) {
+          setTimeout(() => {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }, 300);
+        }
+      }
+    });
+  </script>
+
+  <script id="header-particle-network">
+    (function () {
+      var ParticleNetworkAnimation, PNA;
+      ParticleNetworkAnimation = PNA = function () { };
+
+      PNA.prototype.init = function (element) {
         this.$el = element;
         this.container = element;
         this.canvas = document.createElement('canvas');
@@ -378,20 +414,20 @@
         return this;
       };
 
-      PNA.prototype.bindUiActions = function() {
-        window.addEventListener('resize', function() {
+      PNA.prototype.bindUiActions = function () {
+        window.addEventListener('resize', function () {
           this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
           this.sizeCanvas();
           this.particleNetwork.createParticles();
         }.bind(this));
       };
 
-      PNA.prototype.sizeCanvas = function() {
+      PNA.prototype.sizeCanvas = function () {
         this.canvas.width = this.container.offsetWidth;
         this.canvas.height = this.container.offsetHeight;
       };
 
-      var Particle = function(parent, x, y) {
+      var Particle = function (parent, x, y) {
         this.network = parent;
         this.canvas = parent.canvas;
         this.ctx = parent.ctx;
@@ -406,7 +442,7 @@
         };
       };
 
-      Particle.prototype.update = function() {
+      Particle.prototype.update = function () {
         if (this.opacity < 1) this.opacity += 0.01; else this.opacity = 1;
         if (this.x > this.canvas.width + 100 || this.x < -100) this.velocity.x = -this.velocity.x;
         if (this.y > this.canvas.height + 100 || this.y < -100) this.velocity.y = -this.velocity.y;
@@ -414,7 +450,7 @@
         this.y += this.velocity.y;
       };
 
-      Particle.prototype.draw = function() {
+      Particle.prototype.draw = function () {
         this.ctx.beginPath();
         this.ctx.fillStyle = this.particleColor;
         this.ctx.globalAlpha = this.opacity;
@@ -422,7 +458,7 @@
         this.ctx.fill();
       };
 
-      var ParticleNetwork = function(parent) {
+      var ParticleNetwork = function (parent) {
         this.options = {
           velocity: 1,
           density: 15000,
@@ -435,13 +471,13 @@
         this.init();
       };
 
-      ParticleNetwork.prototype.init = function() {
+      ParticleNetwork.prototype.init = function () {
         this.createParticles(true);
         this.animationFrame = requestAnimationFrame(this.update.bind(this));
         this.bindUiActions();
       };
 
-      ParticleNetwork.prototype.createParticles = function(isInitial) {
+      ParticleNetwork.prototype.createParticles = function (isInitial) {
         var me = this;
         this.particles = [];
         var quantity = this.canvas.width * this.canvas.height / this.options.density;
@@ -449,7 +485,7 @@
         if (isInitial) {
           var counter = 0;
           clearInterval(this.createIntervalId);
-          this.createIntervalId = setInterval(function() {
+          this.createIntervalId = setInterval(function () {
             if (counter < quantity - 1) {
               this.particles.push(new Particle(this));
             } else {
@@ -464,14 +500,14 @@
         }
       };
 
-      ParticleNetwork.prototype.createInteractionParticle = function() {
+      ParticleNetwork.prototype.createInteractionParticle = function () {
         this.interactionParticle = new Particle(this);
         this.interactionParticle.velocity = { x: 0, y: 0 };
         this.particles.push(this.interactionParticle);
         return this.interactionParticle;
       };
 
-      ParticleNetwork.prototype.removeInteractionParticle = function() {
+      ParticleNetwork.prototype.removeInteractionParticle = function () {
         var index = this.particles.indexOf(this.interactionParticle);
         if (index > -1) {
           this.interactionParticle = undefined;
@@ -479,7 +515,7 @@
         }
       };
 
-      ParticleNetwork.prototype.update = function() {
+      ParticleNetwork.prototype.update = function () {
         if (this.canvas) {
           this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
           this.ctx.globalAlpha = 1;
@@ -515,18 +551,18 @@
         }
       };
 
-      ParticleNetwork.prototype.bindUiActions = function() {
+      ParticleNetwork.prototype.bindUiActions = function () {
         this.spawnQuantity = 3;
         this.mouseIsDown = false;
         this.touchIsMoving = false;
 
-        this.onMouseMove = function(e) {
+        this.onMouseMove = function (e) {
           if (!this.interactionParticle) this.createInteractionParticle();
           this.interactionParticle.x = e.offsetX;
           this.interactionParticle.y = e.offsetY;
         }.bind(this);
 
-        this.onTouchMove = function(e) {
+        this.onTouchMove = function (e) {
           e.preventDefault();
           this.touchIsMoving = true;
           if (!this.interactionParticle) this.createInteractionParticle();
@@ -534,9 +570,9 @@
           this.interactionParticle.y = e.changedTouches[0].clientY - this.canvas.getBoundingClientRect().top;
         }.bind(this);
 
-        this.onMouseDown = function(e) {
+        this.onMouseDown = function (e) {
           this.mouseIsDown = true;
-          var counter = 0, quantity = this.spawnQuantity, intervalId = setInterval(function() {
+          var counter = 0, quantity = this.spawnQuantity, intervalId = setInterval(function () {
             if (this.mouseIsDown) {
               if (counter === 1) quantity = 1;
               for (var i = 0; i < quantity; i++) {
@@ -547,9 +583,9 @@
           }.bind(this), 50);
         }.bind(this);
 
-        this.onTouchStart = function(e) {
+        this.onTouchStart = function (e) {
           e.preventDefault();
-          setTimeout(function() {
+          setTimeout(function () {
             if (!this.touchIsMoving) {
               for (var i = 0; i < this.spawnQuantity; i++) {
                 this.particles.push(new Particle(this, e.changedTouches[0].clientX - this.canvas.getBoundingClientRect().left, e.changedTouches[0].clientY - this.canvas.getBoundingClientRect().top));
@@ -558,9 +594,9 @@
           }.bind(this), 200);
         }.bind(this);
 
-        this.onMouseUp = function(e) { this.mouseIsDown = false; }.bind(this);
-        this.onMouseOut = function(e) { this.removeInteractionParticle(); }.bind(this);
-        this.onTouchEnd = function(e) {
+        this.onMouseUp = function (e) { this.mouseIsDown = false; }.bind(this);
+        this.onMouseOut = function (e) { this.removeInteractionParticle(); }.bind(this);
+        this.onTouchEnd = function (e) {
           e.preventDefault();
           this.touchIsMoving = false;
           this.removeInteractionParticle();
@@ -575,7 +611,7 @@
         this.canvas.addEventListener('touchend', this.onTouchEnd);
       };
 
-      ParticleNetwork.prototype.unbindUiActions = function() {
+      ParticleNetwork.prototype.unbindUiActions = function () {
         if (this.canvas) {
           this.canvas.removeEventListener('mousemove', this.onMouseMove);
           this.canvas.removeEventListener('touchmove', this.onTouchMove);
@@ -587,13 +623,13 @@
         }
       };
 
-      var getLimitedRandom = function(min, max, roundToInteger) {
+      var getLimitedRandom = function (min, max, roundToInteger) {
         var number = Math.random() * (max - min) + min;
         if (roundToInteger) number = Math.round(number);
         return number;
       };
 
-      var returnRandomArrayitem = function(array) {
+      var returnRandomArrayitem = function (array) {
         return array[Math.floor(Math.random() * array.length)];
       };
 

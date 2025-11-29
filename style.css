@@ -93,11 +93,6 @@ a:hover {
   color: var(--accent-hover);
 }
 
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 120px;
-}
-
 .container {
   max-width: 1320px;
   margin: 0 auto;
@@ -221,15 +216,10 @@ html {
   left: 0;
 }
 
-.nav a:target,
-.nav a.active {
-  color: #ffffff;
-}
-
-.nav a:target::after,
-.nav a.active::after {
+.nav a:hover {
   width: 100%;
   left: 0;
+  cursor: pointer;
 }
 
 .menu-toggle {
